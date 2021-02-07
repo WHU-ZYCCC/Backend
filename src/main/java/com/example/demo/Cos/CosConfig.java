@@ -8,6 +8,9 @@ import com.qcloud.cos.region.Region;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * @author dzy
  * @title: CosConfig
@@ -39,15 +42,22 @@ public class CosConfig {
 
     private static COSClient cosClient;
     public static COSClient GetCosClient() {
-        CosConfig cosConfig = new CosConfig();
-        // 存储桶的命名格式为 BucketName-APPID，此处填写的存储桶名称必须为此格式
-        COSCredentials cred = new BasicCOSCredentials(cosConfig.secretId, cosConfig.secretKey);
-        Region region = new Region(cosConfig.regionName);
-        ClientConfig clientConfig = new ClientConfig(region);
-        if (cosClient == null) {
-            // 生成 cos 客户端。
-            cosClient = new COSClient(cred, clientConfig);
+        Lock lock = new ReentrantLock();
+        lock.lock();
+        try {
+            if (cosClient == null) {
+                CosConfig cosConfig = new CosConfig();
+                // 存储桶的命名格式为 BucketName-APPID，此处填写的存储桶名称必须为此格式
+                COSCredentials cred = new BasicCOSCredentials(cosConfig.secretId, cosConfig.secretKey);
+                Region region = new Region(cosConfig.regionName);
+                ClientConfig clientConfig = new ClientConfig(region);
+                // 生成 cos 客户端。
+                cosClient = new COSClient(cred, clientConfig);
+            }
+            return cosClient;
         }
-        return cosClient;
+        finally {
+            lock.unlock();
+        }
     }
 }
