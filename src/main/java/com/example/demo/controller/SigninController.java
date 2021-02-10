@@ -49,7 +49,12 @@ public class SigninController {
         List<Signin> list = signinMapper.selectByExample(example);
         return JSON.toJSONString(list);
     }
-
+    @GetMapping("/getToday")
+    @ResponseBody
+    public String getToday() throws ParseException {
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        return getOneDay(today);
+    }
     @GetMapping("/getAll")
     @ResponseBody
     public String GetAll() {
