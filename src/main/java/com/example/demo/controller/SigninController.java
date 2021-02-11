@@ -33,7 +33,7 @@ public class SigninController {
     SigninMapper signinMapper;
     @GetMapping("/getOneDay/{strday}")
     @ResponseBody
-    public String getOneDay(@PathVariable("strday") String strday) throws ParseException {
+    public Object getOneDay(@PathVariable("strday") String strday) throws ParseException {
         Date day = new SimpleDateFormat("yyyy-MM-dd").
                 parse(strday);
         Date nextDay = new Date();
@@ -47,23 +47,25 @@ public class SigninController {
         example.or(criteria);
 
         List<Signin> list = signinMapper.selectByExample(example);
-        return JSON.toJSONString(list);
+        return list;
     }
+
     @GetMapping("/getToday")
     @ResponseBody
-    public String getToday() throws ParseException {
+    public Object getToday() throws ParseException {
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         return getOneDay(today);
     }
+
     @GetMapping("/getAll")
     @ResponseBody
-    public String GetAll() {
-        return JSON.toJSONString(signinMapper.selectByExample(new SigninExample()));
+    public Object GetAll() {
+        return signinMapper.selectByExample(new SigninExample());
     }
 
     @PostMapping("/sign")
     @ResponseBody
-    public String sign(@RequestParam("name") String name,
+    public Object sign(@RequestParam("name") String name,
                        @RequestParam("number") String number,
                        @RequestParam("longitude") BigDecimal longitude,
                        @RequestParam("latitude") BigDecimal latitude,
@@ -75,6 +77,6 @@ public class SigninController {
         signin.setNumber(number);
         signin.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date));
         signinMapper.insert(signin);
-        return JSON.toJSONString(signin);
+        return signin;
     }
 }

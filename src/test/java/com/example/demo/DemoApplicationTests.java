@@ -22,7 +22,7 @@ class DemoApplicationTests {
 
     @Test
     void testStrArrayToJson() {
-        String[] testArray = new String[] {"Lhr","and","Lgp"};
+        Object[] testArray = new String[] {"Lhr","and","Lgp"};
         String jsonStr = JSON.toJSONString(testArray);
         System.out.println(jsonStr);
     }
