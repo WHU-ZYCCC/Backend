@@ -14,10 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author dzy
@@ -60,7 +57,16 @@ public class SigninController {
     @GetMapping("/getAll")
     @ResponseBody
     public Object GetAll() {
-        return signinMapper.selectByExample(new SigninExample());
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+        HashMap<String,List<Signin>> map = new HashMap<>();
+        List<Signin> list = signinMapper.selectByExample(new SigninExample());
+        list.stream().forEach(signin -> {
+            String date = format.format(signin.getDate());
+            List<Signin> dateList = map.getOrDefault(date,new LinkedList<Signin>());
+            dateList.add(signin);
+            map.put(date,dateList);
+        });
+        return map;
     }
 
     @PostMapping("/sign")
