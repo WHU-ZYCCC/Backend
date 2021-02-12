@@ -85,4 +85,10 @@ public class SigninController {
         signinMapper.insert(signin);
         return signin;
     }
+
+    @GetMapping("/radius")
+    @ResponseBody
+    public Object Radius() {
+        return 70;
+    }
 }
