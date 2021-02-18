@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.Cos.CosOp;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.model.PutObjectResult;
@@ -45,6 +46,7 @@ public class ToolController {
             e.printStackTrace();
             return "上传失败";
         }
-        return "ok";
+
+        return CosOp.putObject(localFile);
     }
 }

@@ -83,7 +83,7 @@ public class CosOp {
         cosList.stream().forEach(x->result.add(GetDownloadUrl(x.getKey())));
         return result;
     }
-    public PutObjectResult putObject(File file)
+    public static PutObjectResult putObject(File file)
             throws CosClientException, CosServiceException {
         COSClient cosClient = CosConfig.GetCosClient();
         CosConfig cosConfig = new CosConfig();
