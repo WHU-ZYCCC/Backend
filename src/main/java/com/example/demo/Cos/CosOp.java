@@ -4,11 +4,9 @@ import com.qcloud.cos.COSClient;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.http.HttpMethodName;
-import com.qcloud.cos.model.COSObjectSummary;
-import com.qcloud.cos.model.GeneratePresignedUrlRequest;
-import com.qcloud.cos.model.ListObjectsRequest;
-import com.qcloud.cos.model.ObjectListing;
+import com.qcloud.cos.model.*;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Date;
 import java.util.LinkedList;
@@ -84,5 +82,11 @@ public class CosOp {
         List<COSObjectSummary> cosList = SearchAll();
         cosList.stream().forEach(x->result.add(GetDownloadUrl(x.getKey())));
         return result;
+    }
+    public PutObjectResult putObject(File file)
+            throws CosClientException, CosServiceException {
+        COSClient cosClient = CosConfig.GetCosClient();
+        CosConfig cosConfig = new CosConfig();
+        return cosClient.putObject(cosConfig.bucketName,cosConfig.secretKey,file);
     }
 }
