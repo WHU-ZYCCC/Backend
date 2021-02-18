@@ -84,9 +84,9 @@ public class CosOp {
         return result;
     }
     public static PutObjectResult putObject(File file)
-            throws CosClientException, CosServiceException {
+            throws CosClientException{
         COSClient cosClient = CosConfig.GetCosClient();
         CosConfig cosConfig = new CosConfig();
-        return cosClient.putObject(cosConfig.bucketName,cosConfig.secretKey,file);
+        return cosClient.putObject(cosConfig.bucketName, file.getName() , file);
     }
 }
