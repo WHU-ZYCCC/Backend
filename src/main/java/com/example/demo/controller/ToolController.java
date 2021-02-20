@@ -1,9 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.Cos.CosOp;
+import com.example.demo.Img.ImgOp;
+import com.example.demo.data.domain.Tool;
+import com.example.demo.data.mapper.ToolMapper;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.model.PutObjectResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,14 +25,25 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/tool")
 public class ToolController {
+    @Autowired
+    ToolMapper toolMapper;
     @PostMapping("/upload")
     @ResponseBody
-    public Object uploadFile(@RequestParam("id") int id,
+    public Object uploadFile(
+                             @RequestParam("name") String name,
+                             @RequestParam("description") String description,
                              @RequestParam("file") MultipartFile file) {
-        return saveFile(file);
+        String imagekey = saveFile(file);
+        Tool tool = new Tool();
+        tool.setName(name);
+        tool.setDescription(description);
+        tool.setImagekey(imagekey);
+        String aikey = ImgOp.GetImgLable(CosOp.GetDownloadUrl(imagekey));
+        tool.setAikey(aikey);
+        return toolMapper.insert(tool);
     }
 
-    private Object saveFile(MultipartFile file){
+    private String saveFile(MultipartFile file){
         if (file.isEmpty()){
             return "未选择文件";
         }
