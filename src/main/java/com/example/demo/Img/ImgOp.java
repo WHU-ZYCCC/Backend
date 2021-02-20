@@ -18,16 +18,16 @@ import com.tencentcloudapi.tiia.v20190529.models.DetectLabelResponse;
 public class ImgOp {
     public static String GetImgLable(String imgUrl) {
         try{
-            Credential cred = new Credential("11", "");
+            Credential cred = ImgConfig.GetCredential();
             HttpProfile httpProfile = new HttpProfile();
             httpProfile.setEndpoint("tiia.tencentcloudapi.com");
             ClientProfile clientProfile = new ClientProfile();
             clientProfile.setHttpProfile(httpProfile);
-            TiiaClient client = new TiiaClient(cred, "ap-shanghai", clientProfile);
+            TiiaClient client = new TiiaClient(cred, new ImgConfig().region, clientProfile);
             DetectLabelRequest req = new DetectLabelRequest();
             req.setImageUrl(imgUrl);
             DetectLabelResponse resp = client.DetectLabel(req);
-            return resp.toString();
+            return DetectLabelResponse.toJsonString(resp);
         } catch (TencentCloudSDKException e) {
             System.out.println(e.toString());
             return "";
