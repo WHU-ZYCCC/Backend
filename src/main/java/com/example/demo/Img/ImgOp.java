@@ -33,7 +33,7 @@ public class ImgOp {
             DetectLabelRequest req = new DetectLabelRequest();
             req.setImageUrl(imgUrl);
             DetectLabelResponse resp = client.DetectLabel(req);
-            return JSON.toJSONString(handleLabels(resp));
+            return handleLabels(resp);
         } catch (TencentCloudSDKException e) {
             System.out.println(e.toString());
             return "";
@@ -45,11 +45,12 @@ public class ImgOp {
      * @param resp
      * @return
      */
-    public static List<String> handleLabels(DetectLabelResponse resp) {
-        List<String> list = new LinkedList<>();
+    public static String handleLabels(DetectLabelResponse resp) {
+        StringBuilder sb = new StringBuilder();
         Arrays.stream(resp.getLabels()).forEach(di -> {
-            list.add(di.getName());
+            sb.append(di.getName());
+            sb.append(" ");
         });
-        return list;
+        return sb.toString();
     }
 }
