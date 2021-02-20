@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.example.demo.Cos.CosOp;
 import com.example.demo.Img.ImgOp;
 import com.example.demo.data.domain.Tool;
+import com.example.demo.data.domain.ToolExample;
 import com.example.demo.data.mapper.ToolMapper;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
@@ -63,5 +65,11 @@ public class ToolController {
             return "上传失败";
         }
         return CosOp.putObject(localFile);
+    }
+    @GetMapping("/getAll")
+    @ResponseBody
+    public Object GetAllTool() {
+        ToolExample example = new ToolExample();
+        return toolMapper.selectByExample(example);
     }
 }
