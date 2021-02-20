@@ -20,7 +20,8 @@ import java.util.List;
  * @date 2021/2/613:30
  */
 public class CosOp {
-    public static final String bucketName="picture-1304825952";
+    public static final String bucketName = "picture-1304825952";
+
     public static List<COSObjectSummary> SearchAll() {
         COSClient cosClient = CosConfig.GetCosClient();
         // Bucket的命名格式为 BucketName-APPID ，此处填写的存储桶名称必须为此格式
@@ -34,22 +35,26 @@ public class CosOp {
         listObjectsRequest.setDelimiter("/");
 // 设置最大遍历出多少个对象, 一次listobject最大支持1000
 //        listObjectsRequest.setMaxKeys(1000);
-        ObjectListing objectListing = null;
+        ObjectListing objectListing;
 //        do {
-            try {
-                objectListing = cosClient.listObjects(listObjectsRequest);
-            } catch (CosServiceException e) {
-                e.printStackTrace();
-                return null;
-            } catch (CosClientException e) {
-                e.printStackTrace();
-                return null;
-            }
-            // common prefix表示表示被delimiter截断的路径, 如delimter设置为/, common prefix则表示所有子目录的路径
-            List<String> commonPrefixs = objectListing.getCommonPrefixes();
-            // object summary表示所有列出的object列表
-            List<COSObjectSummary> cosObjectSummaries = objectListing.getObjectSummaries();
-            return cosObjectSummaries;
+        try {
+            objectListing = cosClient.listObjects(listObjectsRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+//            } catch (CosServiceException e) {
+//                e.printStackTrace();
+//                return null;
+//            } catch (CosClientException e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+        // common prefix表示表示被delimiter截断的路径, 如delimter设置为/, common prefix则表示所有子目录的路径
+        List<String> commonPrefixs = objectListing.getCommonPrefixes();
+        // object summary表示所有列出的object列表
+//        List<COSObjectSummary> cosObjectSummaries = objectListing.getObjectSummaries();
+        return objectListing.getObjectSummaries();
 //            for (COSObjectSummary cosObjectSummary : cosObjectSummaries) {
 //                // 文件的路径key
 //                String key = cosObjectSummary.getKey();
@@ -65,6 +70,7 @@ public class CosOp {
 //            listObjectsRequest.setMarker(nextMarker);
 //        } while (objectListing.isTruncated());
     }
+
     public static String GetDownloadUrl(String key) {
         COSClient cosClient = CosConfig.GetCosClient();
 //        String bucketName = "picture-1304825952";
@@ -77,16 +83,24 @@ public class CosOp {
         URL url = cosClient.generatePresignedUrl(req);
         return url.toString();
     }
+
     public static List<String> GetAllDownloadUrl() {
         List<String> result = new LinkedList<>();
         List<COSObjectSummary> cosList = SearchAll();
-        cosList.stream().forEach(x->result.add(GetDownloadUrl(x.getKey())));
+        if (cosList != null)
+            cosList.forEach(x -> result.add(GetDownloadUrl(x.getKey())));
         return result;
     }
-    public static PutObjectResult putObject(File file)
-            throws CosClientException{
+
+    public static String putObject(File file)
+            throws CosClientException {
         COSClient cosClient = CosConfig.GetCosClient();
         CosConfig cosConfig = new CosConfig();
-        return cosClient.putObject(cosConfig.bucketName, file.getName() , file);
+        try {
+            cosClient.putObject(cosConfig.bucketName, file.getName(), file);
+            return file.getName();
+        } catch (CosClientException ex) {
+            return "";
+        }
     }
 }

@@ -36,7 +36,8 @@ public class ToolController {
         String filePath = System.getProperty("user.dir") + "\\image\\";
         File temp = new File(filePath);
         if (!temp.exists()){
-            temp.mkdirs();
+            if(!temp.mkdirs())
+                return "创建文件夹失败";
         }
         File localFile = new File(filePath+filename);
         try {
@@ -46,7 +47,6 @@ public class ToolController {
             e.printStackTrace();
             return "上传失败";
         }
-
         return CosOp.putObject(localFile);
     }
 }
