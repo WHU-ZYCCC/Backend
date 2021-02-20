@@ -34,3 +34,4 @@ build/
 
 src/main/resources/CosConfig.xml
 image/
+/src/main/resources/ImgConfig.xml

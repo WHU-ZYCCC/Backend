@@ -25,7 +25,7 @@ public class ImgOp {
             clientProfile.setHttpProfile(httpProfile);
             TiiaClient client = new TiiaClient(cred, "ap-shanghai", clientProfile);
             DetectLabelRequest req = new DetectLabelRequest();
-            req.setImageUrl("11111111");
+            req.setImageUrl(imgUrl);
             DetectLabelResponse resp = client.DetectLabel(req);
             return resp.toString();
         } catch (TencentCloudSDKException e) {
