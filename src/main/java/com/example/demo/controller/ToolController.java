@@ -88,4 +88,9 @@ public class ToolController {
         });
         return VOList;
     }
+    @GetMapping("/delete/{id}")
+    @ResponseBody
+    public Object DeleteById(@PathVariable("id") int id) {
+        return toolMapper.deleteByPrimaryKey(id);
+    }
 }
