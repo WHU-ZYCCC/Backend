@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author dzy
@@ -66,10 +68,24 @@ public class ToolController {
         }
         return CosOp.putObject(localFile);
     }
+    class ToolVO {
+        public Tool toolInfo;
+        public String imgUrl;
+        ToolVO(Tool t) {
+            this.toolInfo = t;
+        }
+    }
     @GetMapping("/getAll")
     @ResponseBody
     public Object GetAllTool() {
         ToolExample example = new ToolExample();
-        return toolMapper.selectByExample(example);
+        List<Tool> toolList = toolMapper.selectByExample(example);
+        List<ToolVO> VOList = new LinkedList<>();
+        toolList.forEach(tool -> {
+            ToolVO toolVO = new ToolVO(tool);
+            toolVO.imgUrl = CosOp.GetDownloadUrl(toolVO.toolInfo.getImagekey());
+            VOList.add(toolVO);
+        });
+        return VOList;
     }
 }
