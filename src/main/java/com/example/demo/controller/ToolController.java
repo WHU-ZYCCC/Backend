@@ -93,4 +93,16 @@ public class ToolController {
     public Object DeleteById(@PathVariable("id") int id) {
         return toolMapper.deleteByPrimaryKey(id);
     }
+    @PostMapping("/update")
+    @ResponseBody
+    public Object UpdateById(@RequestParam("id") Integer id,
+                             @RequestParam("name") String name,
+                             @RequestParam("description") String description,
+                             @RequestParam("aikey") String aikey) {
+        Tool tool = toolMapper.selectByPrimaryKey(id);
+        tool.setName(name);
+        tool.setDescription(description);
+        tool.setAikey(aikey);
+        return toolMapper.updateByPrimaryKey(tool);
+    }
 }
